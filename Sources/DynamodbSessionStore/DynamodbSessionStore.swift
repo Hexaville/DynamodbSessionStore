@@ -42,10 +42,16 @@ public struct DynamodbSessionStore: SessionStoreProvider {
     
     public func write(value: [String : Any], forKey: String, ttl: Int?) throws {
         let data = try JSONSerialization.data(withJSONObject: value, options: [])
-        let item: [String: Dynamodb.AttributeValue] = [
+        var item: [String: Dynamodb.AttributeValue] = [
             "session_id" : Dynamodb.AttributeValue(s: forKey),
             "value": Dynamodb.AttributeValue(s: data.base64EncodedString())
         ]
+        
+        if let ttl = ttl {
+            var date = Date()
+            date.addTimeInterval(TimeInterval(ttl))
+            item["expires_at"] = Dynamodb.AttributeValue(n: "\(Int(date.timeIntervalSince1970))")
+        }
         
         let input = Dynamodb.PutItemInput(
             item: item,
