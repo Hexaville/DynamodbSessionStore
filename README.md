@@ -17,7 +17,32 @@ let package = Package(
         .Package(url: "https://github.com/Hexaville/DynamodbSessionStore.git", majorVersion: 0, minor: 1)
     ]
 )
+```
 
+### Pre create the table for session data storeing from CLI
+
+If you didn't create the table before, You need to create it first.
+The instruction is following.
+
+#### Build and execute DynamodbSessionStoreTableManager
+```
+cd /path/to/YourApp
+swift build
+./.build/debug/DynamodbSessionStoreTableManager
+```
+
+### The output is ....
+```
+Available commands: 
+- create              
+- delete              
+- help                Prints this help information
+- version             Prints the current version of this app
+```
+
+### Create Table for session storeing
+```
+./.build/debug/DynamodbSessionStoreTableManager create table_name
 ```
 
 ## Usage
