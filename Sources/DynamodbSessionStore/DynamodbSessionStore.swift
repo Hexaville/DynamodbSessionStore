@@ -33,18 +33,16 @@ public struct DynamodbSessionStore: SessionStoreProvider {
             throw DynamodbSessionStoreError.couldNotFindItem
         }
         
-        guard let data = Data(base64Encoded: jsonStr, options: Data.Base64DecodingOptions(rawValue: 0)) else {
-            return nil
-        }
-        
-        return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+        let encodedData = Data(bytes: Base64Encoder.shared.decode(Array(jsonStr.utf8)))
+        return try JSONSerialization.jsonObject(with: encodedData, options: []) as? [String: Any]
     }
     
     public func write(value: [String : Any], forKey: String, ttl: Int?) throws {
         let data = try JSONSerialization.data(withJSONObject: value, options: [])
+        let stringValue = String(bytes: Base64Encoder.shared.encode(data.bytes), encoding: .utf8) ?? ""
         var item: [String: Dynamodb.AttributeValue] = [
             "session_id" : Dynamodb.AttributeValue(s: forKey),
-            "value": Dynamodb.AttributeValue(s: data.base64EncodedString())
+            "value": Dynamodb.AttributeValue(s: stringValue)
         ]
         
         if let ttl = ttl {
