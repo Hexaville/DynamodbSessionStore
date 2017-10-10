@@ -1,16 +1,21 @@
-// swift-tools-version:3.1
+// swift-tools-version:4.0
 
 import PackageDescription
 
 let package = Package(
     name: "DynamodbSessionStore",
-    targets: [
-        Target(name: "DynamodbSessionStore"),
-        Target(name: "DynamodbSessionStoreTableManager"),
-        Target(name: "DynamodbSessionStoreExample", dependencies: ["DynamodbSessionStore"])
+    products: [
+        .library(name: "DynamodbSessionStore", targets: ["DynamodbSessionStore"]),
+        .executable(name: "dynamodb-session-store-table-manager", targets: ["DynamodbSessionStoreTableManager"]),
+        .executable(name: "dynamodb-session-store-example", targets: ["DynamodbSessionStoreExample"]),
     ],
     dependencies: [
-        .Package(url: "https://github.com/swift-aws/dynamodb.git", majorVersion: 0, minor: 1),
-        .Package(url: "https://github.com/noppoMan/HexavilleFramework.git", majorVersion: 0, minor: 1)
+        .package(url: "https://github.com/swift-aws/dynamodb.git", .upToNextMajor(from: "1.0.0")),
+        .package(url: "https://github.com/noppoMan/HexavilleFramework.git", .upToNextMajor(from: "0.1.15"))
+    ],
+    targets: [
+        .target(name: "DynamodbSessionStore", dependencies: ["SwiftAWSDynamodb", "HexavilleFramework"]),
+        .target(name: "DynamodbSessionStoreTableManager", dependencies: ["DynamodbSessionStore"]),
+        .target(name: "DynamodbSessionStoreExample", dependencies: ["DynamodbSessionStore"])
     ]
 )

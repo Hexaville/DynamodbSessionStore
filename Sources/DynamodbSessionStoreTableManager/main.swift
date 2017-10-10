@@ -11,9 +11,9 @@ class CreateCommand: Command {
     
     let name = "create"
     let tableName = Parameter()
-    let writeCapacityUnits = Key<Int>("--writeCapacityUnits", usage: "numnber of WriteCapacityUnits")
-    let readCapacityUnits = Key<Int>("--readCapacityUnits", usage: "numnber of ReadCapacityUnits")
-    let endpoint = Key<String>("--endpoint", usage: "The endpoint string. ex: http://localhost:8000")
+    let writeCapacityUnits = Key<Int>("--writeCapacityUnits", description: "numnber of WriteCapacityUnits")
+    let readCapacityUnits = Key<Int>("--readCapacityUnits", description: "numnber of ReadCapacityUnits")
+    let endpoint = Key<String>("--endpoint", description: "The endpoint string. ex: http://localhost:8000")
     
     func execute() throws {
         let dynamodb = Dynamodb(endpoint: endpoint.value)
@@ -94,7 +94,7 @@ class CreateCommand: Command {
 class DeleteCommand: Command {
     let name = "delete"
     let tableName = Parameter()
-    let endpoint = Key<String>("--endpoint", usage: "The endpoint string. ex: http://localhost:8000")
+    let endpoint = Key<String>("--endpoint", description: "The endpoint string. ex: http://localhost:8000")
     
     func execute() throws {
         do {
@@ -107,6 +107,6 @@ class DeleteCommand: Command {
     }
 }
 
-CLI.setup(name: "hexaville-dynamodb-session-store-table-manager")
-CLI.register(commands: [CreateCommand(), DeleteCommand()])
-_ = CLI.go()
+let ddbSesTableManagerCLI = CLI(name: "hexaville-dynamodb-session-store-table-manager")
+ddbSesTableManagerCLI.commands = [CreateCommand(), DeleteCommand()]
+_ = ddbSesTableManagerCLI.go()

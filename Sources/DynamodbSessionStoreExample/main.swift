@@ -20,7 +20,7 @@ app.use { req, context in
     return .next(req)
 }
 
-let router = Router()
+var router = Router()
 
 router.use(.get, "/") { req, context in
     if let now = context.session?["now"] {
