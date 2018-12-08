@@ -7,7 +7,7 @@ dist: trusty
 osx_image: xcode8.3
 
 install:
-  - curl -L https://rawgit.com/noppoMan/swift-scripts/master/install-swift3.sh > install-swift3.sh
+  - curl -L https://cdn.jsdelivr.net/gh/noppoMan/swift-scripts/install-swift3.sh > install-swift3.sh
   - source ./install-swift3.sh
 
 script:
