@@ -2,30 +2,21 @@
   "object": {
     "pins": [
       {
+        "package": "AWSSDKSwift",
+        "repositoryURL": "https://github.com/swift-aws/aws-sdk-swift.git",
+        "state": {
+          "branch": null,
+          "revision": "b66a8ad7f949ef80a503069603ad1abd240e7f7d",
+          "version": "2.0.2"
+        }
+      },
+      {
         "package": "AWSSDKSwiftCore",
-        "repositoryURL": "https://github.com/noppoMan/aws-sdk-swift-core.git",
+        "repositoryURL": "https://github.com/swift-aws/aws-sdk-swift-core.git",
         "state": {
           "branch": null,
-          "revision": "2fbdcf3c46c30dbf630be667a7ca1ee5b59fb2a6",
-          "version": "1.0.4"
-        }
-      },
-      {
-        "package": "CHTTPParser",
-        "repositoryURL": "https://github.com/Zewo/CHTTPParser.git",
-        "state": {
-          "branch": null,
-          "revision": "88306ab33bb316b2eedd39c90f4be8f4ebf65a11",
-          "version": "0.14.0"
-        }
-      },
-      {
-        "package": "CLibreSSL",
-        "repositoryURL": "https://github.com/vapor/clibressl.git",
-        "state": {
-          "branch": null,
-          "revision": "23ddb296981d17a8ee6c7418742a40cad5d2f9d0",
-          "version": "1.0.0"
+          "revision": "e1d6f9515f95dacd21758e033c27b15a715aeb21",
+          "version": "2.0.0-rc.3"
         }
       },
       {
@@ -33,35 +24,62 @@
         "repositoryURL": "https://github.com/noppoMan/HexavilleFramework.git",
         "state": {
           "branch": null,
-          "revision": "168658d90b7db006ac71ed6d2191f43fb423e744",
-          "version": "0.1.15"
+          "revision": "6edcc3a4e0f4a37e21846b817e27a4f26513d840",
+          "version": "1.0.0-rc.1"
         }
       },
       {
         "package": "HypertextApplicationLanguage",
-        "repositoryURL": "https://github.com/noppoMan/HypertextApplicationLanguage.git",
+        "repositoryURL": "https://github.com/Yasumoto/HypertextApplicationLanguage.git",
         "state": {
           "branch": null,
-          "revision": "e6216c13fd510e31e70e6f409936f1a656db1f33",
-          "version": "1.0.1"
-        }
-      },
-      {
-        "package": "Prorsum",
-        "repositoryURL": "https://github.com/noppoMan/Prorsum.git",
-        "state": {
-          "branch": null,
-          "revision": "6f2558056fb887a84331c5da7d6ac4211bc16187",
-          "version": "0.1.16"
-        }
-      },
-      {
-        "package": "SwiftAWSDynamodb",
-        "repositoryURL": "https://github.com/swift-aws/dynamodb.git",
-        "state": {
-          "branch": null,
-          "revision": "e3b45596aa55d06d17a43d679dd9e5688e837ac5",
+          "revision": "2302002502fe573494577cc6e8df686e385519f8",
           "version": "1.1.0"
+        }
+      },
+      {
+        "package": "INIParser",
+        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-INIParser.git",
+        "state": {
+          "branch": null,
+          "revision": "0952aac9ca54324ff25191569fd9c48eec424772",
+          "version": "3.0.2"
+        }
+      },
+      {
+        "package": "swift-nio",
+        "repositoryURL": "https://github.com/apple/swift-nio.git",
+        "state": {
+          "branch": null,
+          "revision": "a20e129c22ad00a51c902dca54a5456f90664780",
+          "version": "1.12.0"
+        }
+      },
+      {
+        "package": "swift-nio-ssl",
+        "repositoryURL": "https://github.com/apple/swift-nio-ssl.git",
+        "state": {
+          "branch": null,
+          "revision": "db16c3a90b101bb53b26a58867a344ad428072e0",
+          "version": "1.3.2"
+        }
+      },
+      {
+        "package": "swift-nio-ssl-support",
+        "repositoryURL": "https://github.com/apple/swift-nio-ssl-support.git",
+        "state": {
+          "branch": null,
+          "revision": "c02eec4e0e6d351cd092938cf44195a8e669f555",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "package": "swift-nio-zlib-support",
+        "repositoryURL": "https://github.com/apple/swift-nio-zlib-support.git",
+        "state": {
+          "branch": null,
+          "revision": "37760e9a52030bb9011972c5213c3350fa9d41fd",
+          "version": "1.0.0"
         }
       },
       {
@@ -69,8 +87,17 @@
         "repositoryURL": "https://github.com/jakeheis/SwiftCLI.git",
         "state": {
           "branch": null,
-          "revision": "8e5916bfcc7f8acee6fb2cb36d1ffefb02ac2460",
-          "version": "3.1.0"
+          "revision": "fb076cba39c679da4e27813518d8860d8815a25b",
+          "version": "5.2.1"
+        }
+      },
+      {
+        "package": "SwiftyJSON",
+        "repositoryURL": "https://github.com/IBM-Swift/SwiftyJSON.git",
+        "state": {
+          "branch": null,
+          "revision": "693d2d28fe2f91aedf02c3754baade625fd97c46",
+          "version": "17.0.2"
         }
       }
     ]
