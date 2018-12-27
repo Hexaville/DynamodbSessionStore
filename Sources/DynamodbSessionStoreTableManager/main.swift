@@ -1,6 +1,5 @@
 import Foundation
-import SwiftAWSDynamodb
-import Prorsum
+import DynamoDB
 import SwiftCLI
 
 class CreateCommand: Command {
@@ -16,24 +15,24 @@ class CreateCommand: Command {
     let endpoint = Key<String>("--endpoint", description: "The endpoint string. ex: http://localhost:8000")
     
     func execute() throws {
-        let dynamodb = Dynamodb(endpoint: endpoint.value)
-        let input = Dynamodb.CreateTableInput(
+        let dynamodb = DynamoDB(endpoint: endpoint.value)
+        let input = DynamoDB.CreateTableInput(
+            provisionedThroughput: DynamoDB.ProvisionedThroughput(
+                readCapacityUnits: Int64(readCapacityUnits.value ?? 10),
+                writeCapacityUnits: Int64(writeCapacityUnits.value ?? 10)
+            ),
+            tableName: tableName.value,
             attributeDefinitions: [
-                Dynamodb.AttributeDefinition(attributeType: .s, attributeName: "session_id"),
+                DynamoDB.AttributeDefinition(attributeName: "session_id", attributeType: .s),
             ],
             keySchema: [
-                Dynamodb.KeySchemaElement(attributeName: "session_id", keyType: .hash)
-            ],
-            provisionedThroughput: Dynamodb.ProvisionedThroughput(
-                writeCapacityUnits: Int64(writeCapacityUnits.value ?? 10),
-                readCapacityUnits: Int64(readCapacityUnits.value ?? 10)
-            ),
-            tableName: tableName.value
+                DynamoDB.KeySchemaElement(keyType: .hash, attributeName: "session_id")
+            ]
         )
         
         do {
             _ = try dynamodb.createTable(input)
-            let timeToLiveSpecificationInput = Dynamodb.TimeToLiveSpecification(
+            let timeToLiveSpecificationInput = DynamoDB.TimeToLiveSpecification(
                 attributeName: "expires_at",
                 enabled: true
             )
@@ -57,7 +56,7 @@ class CreateCommand: Command {
                     throw CreateCommandError.timeout
                 }
                 
-                let describeTableOutput = try dynamodb.describeTable(Dynamodb.DescribeTableInput(tableName: tableName.value))
+                let describeTableOutput = try dynamodb.describeTable(DynamoDB.DescribeTableInput(tableName: tableName.value))
                 guard let tableStatus = describeTableOutput.table?.tableStatus else {
                     fatalError("TableStatus must not empty")
                 }
@@ -76,9 +75,9 @@ class CreateCommand: Command {
             
             print("Applying updateTimeToLive configuration to \(tableName.value)....")
             
-            let updateTimeToLiveInput = Dynamodb.UpdateTimeToLiveInput(
-                tableName: tableName.value,
-                timeToLiveSpecification: timeToLiveSpecificationInput
+            let updateTimeToLiveInput = DynamoDB.UpdateTimeToLiveInput(
+                timeToLiveSpecification: timeToLiveSpecificationInput,
+                tableName: tableName.value
             )
             
             _ = try dynamodb.updateTimeToLive(updateTimeToLiveInput)
@@ -98,8 +97,8 @@ class DeleteCommand: Command {
     
     func execute() throws {
         do {
-            let dynamodb = Dynamodb(endpoint: endpoint.value)
-            _ = try dynamodb.deleteTable(Dynamodb.DeleteTableInput(tableName: tableName.value))
+            let dynamodb = DynamoDB(endpoint: endpoint.value)
+            _ = try dynamodb.deleteTable(DynamoDB.DeleteTableInput(tableName: tableName.value))
         } catch {
             print(error)
             throw error

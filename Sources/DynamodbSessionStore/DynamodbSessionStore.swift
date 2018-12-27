@@ -1,6 +1,6 @@
 import Foundation
 import HexavilleFramework
-import SwiftAWSDynamodb
+import DynamoDB
 
 enum DynamodbSessionStoreError: Error {
     case couldNotFindItem
@@ -8,11 +8,11 @@ enum DynamodbSessionStoreError: Error {
 
 public struct DynamodbSessionStore: SessionStoreProvider {
     
-    let dynamodb: Dynamodb
+    let dynamodb: DynamoDB
     
     let tableName: String
     
-    public init(tableName: String, dynamodb: Dynamodb) {
+    public init(tableName: String, dynamodb: DynamoDB) {
         self.dynamodb = dynamodb
         self.tableName = tableName
     }
@@ -23,9 +23,9 @@ public struct DynamodbSessionStore: SessionStoreProvider {
     }
     
     public func read(forKey: String) throws -> [String : Any]? {
-        let input = Dynamodb.GetItemInput(
+        let input = DynamoDB.GetItemInput(
+            key: ["session_id": DynamoDB.AttributeValue(s: forKey)],
             consistentRead: true,
-            key: ["session_id": Dynamodb.AttributeValue(s: forKey)],
             tableName: tableName
         )
         let result = try dynamodb.getItem(input)
@@ -39,19 +39,20 @@ public struct DynamodbSessionStore: SessionStoreProvider {
     
     public func write(value: [String : Any], forKey: String, ttl: Int?) throws {
         let data = try JSONSerialization.data(withJSONObject: value, options: [])
-        let stringValue = String(bytes: Base64Encoder.shared.encode(data.bytes), encoding: .utf8) ?? ""
-        var item: [String: Dynamodb.AttributeValue] = [
-            "session_id" : Dynamodb.AttributeValue(s: forKey),
-            "value": Dynamodb.AttributeValue(s: stringValue)
+        let bytes = data.withUnsafeBytes({ [UInt8](UnsafeBufferPointer(start: $0, count: data.count)) })
+        let stringValue = String(bytes: Base64Encoder.shared.encode(bytes), encoding: .utf8) ?? ""
+        var item: [String: DynamoDB.AttributeValue] = [
+            "session_id" : DynamoDB.AttributeValue(s: forKey),
+            "value": DynamoDB.AttributeValue(s: stringValue)
         ]
         
         if let ttl = ttl {
             var date = Date()
             date.addTimeInterval(TimeInterval(ttl))
-            item["expires_at"] = Dynamodb.AttributeValue(n: "\(Int(date.timeIntervalSince1970))")
+            item["expires_at"] = DynamoDB.AttributeValue(n: "\(Int(date.timeIntervalSince1970))")
         }
         
-        let input = Dynamodb.PutItemInput(
+        let input = DynamoDB.PutItemInput(
             item: item,
             tableName: tableName
         )
@@ -60,8 +61,8 @@ public struct DynamodbSessionStore: SessionStoreProvider {
     }
     
     public func delete(forKey: String) throws {
-        let input = Dynamodb.DeleteItemInput(
-            key: ["session_id" : Dynamodb.AttributeValue(s: forKey)],
+        let input = DynamoDB.DeleteItemInput(
+            key: ["session_id" : DynamoDB.AttributeValue(s: forKey)],
             tableName: tableName
         )
         _ = try dynamodb.deleteItem(input)

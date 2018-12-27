@@ -10,11 +10,11 @@ let package = Package(
         .executable(name: "dynamodb-session-store-example", targets: ["DynamodbSessionStoreExample"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-aws/dynamodb.git", .upToNextMajor(from: "1.0.0")),
-        .package(url: "https://github.com/noppoMan/HexavilleFramework.git", .upToNextMajor(from: "0.1.15"))
+        .package(url: "https://github.com/swift-aws/aws-sdk-swift.git", .upToNextMajor(from: "2.0.2")),
+        .package(url: "https://github.com/noppoMan/HexavilleFramework.git", .upToNextMajor(from: "1.0.0-rc.1"))
     ],
     targets: [
-        .target(name: "DynamodbSessionStore", dependencies: ["SwiftAWSDynamodb", "HexavilleFramework"]),
+        .target(name: "DynamodbSessionStore", dependencies: ["DynamoDB", "HexavilleFramework"]),
         .target(name: "DynamodbSessionStoreTableManager", dependencies: ["DynamodbSessionStore"]),
         .target(name: "DynamodbSessionStoreExample", dependencies: ["DynamodbSessionStore"])
     ]
