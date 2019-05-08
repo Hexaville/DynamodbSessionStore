@@ -28,8 +28,29 @@ public struct DynamodbSessionStore: SessionStoreProvider {
             key: ["session_id": DynamoDB.AttributeValue(s: forKey)],
             tableName: tableName
         )
-        let result = try dynamodb.getItem(input)
-        guard let item = result.item?["value"], let jsonStr = item.s else {
+        
+        let group = DispatchGroup()
+        group.enter()
+        
+        var _result: DynamoDB.GetItemOutput?
+        var _error: Error?
+        
+        DispatchQueue.global().async {
+            do {
+                _result = try self.dynamodb.getItem(input)
+            } catch {
+                _error = error
+            }
+            group.leave()
+        }
+    
+        group.wait()
+        
+        if let error = _error {
+            throw error
+        }
+        
+        guard let item = _result?.item?["value"], let jsonStr = item.s else {
             throw DynamodbSessionStoreError.couldNotFindItem
         }
         
@@ -57,7 +78,25 @@ public struct DynamodbSessionStore: SessionStoreProvider {
             tableName: tableName
         )
         
-        _ = try dynamodb.putItem(input)
+        let group = DispatchGroup()
+        group.enter()
+        
+        var _error: Error?
+        
+        DispatchQueue.global().async {
+            do {
+                _ = try self.dynamodb.putItem(input)
+            } catch {
+                _error = error
+            }
+            group.leave()
+        }
+        
+        group.wait()
+        
+        if let error = _error {
+            throw error
+        }
     }
     
     public func delete(forKey: String) throws {
@@ -65,7 +104,27 @@ public struct DynamodbSessionStore: SessionStoreProvider {
             key: ["session_id" : DynamoDB.AttributeValue(s: forKey)],
             tableName: tableName
         )
-        _ = try dynamodb.deleteItem(input)
+        
+        let group = DispatchGroup()
+        group.enter()
+        
+        var _error: Error?
+        
+        DispatchQueue.global().async {
+            do {
+                _ = try self.dynamodb.deleteItem(input)
+            } catch {
+                _error = error
+            }
+            group.leave()
+        }
+        
+        group.wait()
+        
+        if let error = _error {
+            throw error
+        }
     }
     
 }
+
