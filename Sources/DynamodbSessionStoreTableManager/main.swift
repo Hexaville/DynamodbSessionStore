@@ -17,17 +17,17 @@ class CreateCommand: Command {
     func execute() throws {
         let dynamodb = DynamoDB(endpoint: endpoint.value)
         let input = DynamoDB.CreateTableInput(
-            provisionedThroughput: DynamoDB.ProvisionedThroughput(
-                readCapacityUnits: Int64(readCapacityUnits.value ?? 10),
-                writeCapacityUnits: Int64(writeCapacityUnits.value ?? 10)
-            ),
-            tableName: tableName.value,
             attributeDefinitions: [
                 DynamoDB.AttributeDefinition(attributeName: "session_id", attributeType: .s),
             ],
             keySchema: [
-                DynamoDB.KeySchemaElement(keyType: .hash, attributeName: "session_id")
-            ]
+                DynamoDB.KeySchemaElement(attributeName: "session_id", keyType: .hash)
+            ],
+            provisionedThroughput: DynamoDB.ProvisionedThroughput(
+                readCapacityUnits: Int64(readCapacityUnits.value ?? 10),
+                writeCapacityUnits: Int64(writeCapacityUnits.value ?? 10)
+            ),
+            tableName: tableName.value
         )
         
         do {
@@ -76,8 +76,8 @@ class CreateCommand: Command {
             print("Applying updateTimeToLive configuration to \(tableName.value)....")
             
             let updateTimeToLiveInput = DynamoDB.UpdateTimeToLiveInput(
-                timeToLiveSpecification: timeToLiveSpecificationInput,
-                tableName: tableName.value
+                tableName: tableName.value,
+                timeToLiveSpecification: timeToLiveSpecificationInput
             )
             
             _ = try dynamodb.updateTimeToLive(updateTimeToLiveInput)

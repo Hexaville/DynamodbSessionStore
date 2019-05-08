@@ -24,8 +24,8 @@ public struct DynamodbSessionStore: SessionStoreProvider {
     
     public func read(forKey: String) throws -> [String : Any]? {
         let input = DynamoDB.GetItemInput(
-            key: ["session_id": DynamoDB.AttributeValue(s: forKey)],
             consistentRead: true,
+            key: ["session_id": DynamoDB.AttributeValue(s: forKey)],
             tableName: tableName
         )
         let result = try dynamodb.getItem(input)

@@ -1,7 +1,7 @@
 import Foundation
 import HexavilleFramework
 import DynamodbSessionStore
-import SwiftAWSDynamodb
+import DynamoDB
 
 let app = HexavilleFramework()
 
@@ -9,7 +9,7 @@ let session = SessionMiddleware(
     cookieAttribute: CookieAttribute(expiration: 3600, httpOnly: true, secure: false),
     store: DynamodbSessionStore(
         tableName: ProcessInfo.processInfo.environment["DYNAMODB_SESSION_TABLE_NAME"] ?? "test-table",
-        dynamodb: Dynamodb()
+        dynamodb: DynamoDB()
     )
 )
 
@@ -22,7 +22,7 @@ app.use { req, context in
 
 var router = Router()
 
-router.use(.get, "/") { req, context in
+router.use(.GET, "/") { req, context in
     if let now = context.session?["now"] {
         return Response(body: "current time is: \(now)")
     } else {
