@@ -67,6 +67,9 @@ public struct DynamodbSessionStore: SessionStoreProvider {
             "value": DynamoDB.AttributeValue(s: stringValue)
         ]
         
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print(item)
+        
         if let ttl = ttl {
             var date = Date()
             date.addTimeInterval(TimeInterval(ttl))
