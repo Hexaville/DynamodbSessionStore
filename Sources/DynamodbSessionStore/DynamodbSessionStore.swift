@@ -29,28 +29,17 @@ public struct DynamodbSessionStore: SessionStoreProvider {
             tableName: tableName
         )
         
-        let group = DispatchGroup()
-        group.enter()
-        
-        var _result: DynamoDB.GetItemOutput?
-        var _error: Error?
-        
-        DispatchQueue.global().async {
+        let result: DynamoDB.GetItemOutput = try executeSync { done in
             do {
-                _result = try self.dynamodb.getItem(input)
+                try self.dynamodb.getItem(input).whenSuccess { response in
+                    done(nil, response)
+                }
             } catch {
-                _error = error
+                done(error, nil)
             }
-            group.leave()
-        }
-    
-        group.wait()
-        
-        if let error = _error {
-            throw error
         }
         
-        guard let item = _result?.item?["value"], let jsonStr = item.s else {
+        guard let item = result.item?["value"], let jsonStr = item.s else {
             throw DynamodbSessionStoreError.couldNotFindItem
         }
         
@@ -67,9 +56,6 @@ public struct DynamodbSessionStore: SessionStoreProvider {
             "value": DynamoDB.AttributeValue(s: stringValue)
         ]
         
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        print(item)
-        
         if let ttl = ttl {
             var date = Date()
             date.addTimeInterval(TimeInterval(ttl))
@@ -81,24 +67,15 @@ public struct DynamodbSessionStore: SessionStoreProvider {
             tableName: tableName
         )
         
-        let group = DispatchGroup()
-        group.enter()
         
-        var _error: Error?
-        
-        DispatchQueue.global().async {
+        try executeSyncWithoutReturnValue { done in
             do {
-                _ = try self.dynamodb.putItem(input)
+                try self.dynamodb.putItem(input).whenSuccess { response in
+                    done(nil)
+                }
             } catch {
-                _error = error
+                done(error)
             }
-            group.leave()
-        }
-        
-        group.wait()
-        
-        if let error = _error {
-            throw error
         }
     }
     
@@ -108,26 +85,65 @@ public struct DynamodbSessionStore: SessionStoreProvider {
             tableName: tableName
         )
         
-        let group = DispatchGroup()
-        group.enter()
-        
-        var _error: Error?
-        
-        DispatchQueue.global().async {
+        try executeSyncWithoutReturnValue { done in
             do {
-                _ = try self.dynamodb.deleteItem(input)
+                try self.dynamodb.deleteItem(input).whenSuccess { response in
+                    done(nil)
+                }
             } catch {
-                _error = error
+                done(error)
             }
-            group.leave()
-        }
-        
-        group.wait()
-        
-        if let error = _error {
-            throw error
         }
     }
-    
 }
 
+
+func executeSync<T>(_ fn: (@escaping (Error?, T?) -> Void) -> Void) throws -> T {
+    let group = DispatchGroup()
+    group.enter()
+    
+    var _error: Error?
+    var _result: T?
+    
+    fn { error, result in
+        if error != nil {
+            _error = error
+            return
+        }
+        
+        _result = result
+        
+        group.leave()
+    }
+    
+    group.wait()
+    
+    if let error = _error {
+        throw error
+    }
+    
+    return _result!
+}
+
+
+func executeSyncWithoutReturnValue(_ fn: (@escaping (Error?) -> Void) -> Void) throws {
+    let group = DispatchGroup()
+    group.enter()
+    
+    var _error: Error?
+    
+    fn { error in
+        if error != nil {
+            _error = error
+            return
+        }
+        
+        group.leave()
+    }
+    
+    group.wait()
+    
+    if let error = _error {
+        throw error
+    }
+}

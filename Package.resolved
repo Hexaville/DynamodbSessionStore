@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/swift-aws/aws-sdk-swift.git",
         "state": {
           "branch": null,
-          "revision": "0cffd66a61eff373aed70868a9ff6f720bfd69c2",
-          "version": "2.0.5"
+          "revision": "bc557114b6c16f63780d35ac2c5c21bf5c9b8f12",
+          "version": "3.0.0"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/swift-aws/aws-sdk-swift-core.git",
         "state": {
           "branch": null,
-          "revision": "c62ee0c49909345e437d71028dc63dca8e3b1f9b",
-          "version": "2.0.1"
+          "revision": "254c1e3f85414bf0f529f47cc081be2bd0c12c1c",
+          "version": "3.0.1"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/noppoMan/HexavilleFramework.git",
         "state": {
           "branch": null,
-          "revision": "6c836fb1173a2ee70b0b7fbb4995758b685743af",
-          "version": "1.0.0-rc.2"
+          "revision": "9430c81699849c065b41b1f6b74ef704fa64247b",
+          "version": "1.0.0-rc.3"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/jakeheis/SwiftCLI.git",
         "state": {
           "branch": null,
-          "revision": "5318c37d3cacc8780f50b87a8840a6774320ebdf",
-          "version": "5.2.2"
+          "revision": "2f9325de7dcaa368ce5a3710b04d9df572725b14",
+          "version": "5.3.0"
         }
       },
       {
